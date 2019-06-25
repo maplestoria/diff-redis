@@ -5,28 +5,26 @@ import (
 	"log"
 )
 
-// None thread safe
 type Cursor struct {
-	conn   redis.Conn
-	count  int
-	done   bool
-	cursor int
+	conn    redis.Conn
+	count   int
+	hasDone bool
+	next    int
 }
 
 func New(conn redis.Conn, count int) *Cursor {
-	cursor := &Cursor{conn: conn, count: count, done: false, cursor: 0}
-	return cursor
+	return &Cursor{conn: conn, count: count, hasDone: false, next: 0}
 }
 
-func (iterator *Cursor) Next() []string {
-	if iterator.done {
+func (cursor *Cursor) Next() []string {
+	if !cursor.HasNext() {
 		return nil
 	}
 
-	conn := iterator.conn
-	reply, err := conn.Do("SCAN", iterator.cursor, "COUNT", iterator.count)
+	conn := cursor.conn
+	reply, err := conn.Do("SCAN", cursor.next, "COUNT", cursor.count)
 	if err != nil {
-		log.Fatalln("Cursor do scan failed", err)
+		log.Fatalln("Cursor scan failed:", err)
 	}
 
 	values, err := redis.Values(reply, nil)
@@ -34,10 +32,14 @@ func (iterator *Cursor) Next() []string {
 		log.Fatalln("Cursor's reply is not []interface{}, parse failed:", err)
 	}
 
-	iterator.cursor, _ = redis.Int(values[0], nil)
+	cursor.next, _ = redis.Int(values[0], nil)
 	keys, _ := redis.Strings(values[1], nil)
-	if iterator.cursor == 0 {
-		iterator.done = true
+	if cursor.next == 0 {
+		cursor.hasDone = true
 	}
 	return keys
+}
+
+func (cursor *Cursor) HasNext() bool {
+	return !cursor.hasDone
 }
