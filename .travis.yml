@@ -1,0 +1,8 @@
+language: go
+
+go:
+  - 1.11.4
+
+before_script: sudo redis-server /etc/redis/redis.conf --port 6379 --daemonize yes && sudo redis-server /etc/redis/redis.conf --port 6479 --daemonize yes
+
+script: go test diff-redis/src -v
