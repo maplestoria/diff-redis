@@ -13,6 +13,9 @@ type Cursor struct {
 }
 
 func New(conn redis.Conn, count int) *Cursor {
+	if count <= 0 {
+		count = 256
+	}
 	return &Cursor{conn: conn, count: count, hasDone: false, next: 0}
 }
 

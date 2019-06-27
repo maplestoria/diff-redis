@@ -12,8 +12,8 @@ var (
 	sourcePassword = app.Flag("source-password", "Password of source redis").Short('p').String()
 	target         = app.Flag("target", "target Redis. host:port").Required().Short('t').String()
 	targetPassword = app.Flag("target-password", "Password of target redis").Short('a').String()
-	output         = app.Flag("output", "Write result to").Default("diff-redis.out").Short('o').String()
-	count          = app.Flag("count", "Count of per scan").Default("10").Int()
+	output         = app.Flag("output", "Write result to").Default("diff-redis.result").Short('o').String()
+	count          = app.Flag("count", "Count of per scan").Default("256").Int()
 )
 
 func main() {
