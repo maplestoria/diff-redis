@@ -46,3 +46,8 @@ func (cursor *Cursor) Next() []string {
 func (cursor *Cursor) HasNext() bool {
 	return !cursor.hasDone
 }
+
+func (cursor *Cursor) Reset() {
+	cursor.hasDone = false
+	cursor.next = 0
+}

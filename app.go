@@ -8,10 +8,10 @@ import (
 
 var (
 	app            = kingpin.New("diff-redis", "Find out the missing keys")
-	source         = app.Flag("source", "Source Redis. host:port").Required().Short('s').String()
-	sourcePassword = app.Flag("source-password", "Password of source redis").Short('p').String()
-	target         = app.Flag("target", "target Redis. host:port").Required().Short('t').String()
-	targetPassword = app.Flag("target-password", "Password of target redis").Short('a').String()
+	source         = app.Flag("source", "host:port").Required().Short('s').String()
+	sourcePassword = app.Flag("source-password", "Password of source").Short('p').String()
+	target         = app.Flag("target", "host:port").Required().Short('t').String()
+	targetPassword = app.Flag("target-password", "Password of target").Short('a').String()
 	output         = app.Flag("output", "Write result to").Default("diff-redis.result").Short('o').String()
 	count          = app.Flag("count", "Count of per scan").Default("256").Int()
 )
