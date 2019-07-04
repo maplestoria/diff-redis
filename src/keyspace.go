@@ -9,9 +9,9 @@ import (
 )
 
 type keyspace struct {
-	db      int
-	keys    int
-	scanned int
+	db       int
+	keys     int
+	examined int
 }
 
 func getKeySpaces(conn redis.Conn) (result []keyspace) {

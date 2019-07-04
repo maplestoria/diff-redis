@@ -30,6 +30,9 @@ func Diff(config *Config) {
 	defer close(keysChan)
 	defer close(missedKeys)
 	conf = config
+
+	printProgress()
+
 	wg.Add(1)
 	go scanKeys()
 	wg.Add(1)
@@ -56,10 +59,10 @@ func scanKeys() {
 	_cursor := cursor.New(conn, conf.Count)
 	log.Println("Cursor scanning")
 	for _, keyspace := range keySpaces {
+		addKeyspace(keyspace)
 		switchRedisDb(conn, keyspace.db)
 		for _cursor.HasNext() {
 			keys := _cursor.Next()
-			log.Println("Scanned", len(keys), "keys")
 			group := keyGroup{db: keyspace.db, keys: keys}
 			keysChan <- &group
 		}
@@ -112,6 +115,7 @@ examining:
 						}
 					}
 				}
+				examined(currentDb, len(keyGroup.keys))
 			}
 		default:
 			if scanKeysDone {
