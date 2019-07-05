@@ -38,7 +38,7 @@ func calcProgress() {
 			examined := ks.examined
 
 			progress := examined / keys * 100
-			percent := fmt.Sprintf("%d%", progress)
+			percent := fmt.Sprintf("%d%s", progress, "%")
 
 			log.Println("db:", db, "progress:", percent, "keys:", keys, "examined:", examined)
 		}
