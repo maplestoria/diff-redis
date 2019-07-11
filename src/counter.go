@@ -25,8 +25,9 @@ func examined(db int, size int) {
 func printProgress() {
 	ticker := time.NewTicker(1 * time.Second)
 	go func() {
-		<-ticker.C
-		calcProgress()
+		for range ticker.C {
+			calcProgress()
+		}
 	}()
 }
 
@@ -37,10 +38,10 @@ func calcProgress() {
 			keys := ks.keys
 			examined := ks.examined
 
-			progress := examined / keys * 100
-			percent := fmt.Sprintf("%d%s", progress, "%")
+			progress := (float64(examined) / float64(keys)) * 100
+			percent := fmt.Sprintf("%.2f%s", progress, "%")
 
-			log.Println("db:", db, "progress:", percent, "keys:", keys, "examined:", examined)
+			log.Println("db:", db, "keys:", keys, "examined:", examined, "progress:", percent)
 		}
 		return false
 	})

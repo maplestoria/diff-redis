@@ -31,14 +31,13 @@ func Diff(config *Config) {
 	defer close(missedKeys)
 	conf = config
 
-	printProgress()
-
 	wg.Add(1)
 	go scanKeys()
 	wg.Add(1)
 	go examineKeys()
 	wg.Add(1)
 	go writeToFile()
+	printProgress()
 	wg.Wait()
 }
 
@@ -110,7 +109,6 @@ examining:
 						exists, _ := redis.Int(reply, nil)
 						if exists == 0 {
 							theKey := keyGroup.keys[index]
-							log.Println("key", theKey, "missed in target")
 							missedKeys <- theKey
 						}
 					}
